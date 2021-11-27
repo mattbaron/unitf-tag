@@ -7,7 +7,7 @@ module UnitF
   module Tag
     class File < Pathname
       def initialize(file_path)
-        super(::File.absolute_path(file_path))
+        super(::File.absolute_path(file_path.to_s))
       end
 
       def tag
