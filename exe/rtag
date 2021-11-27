@@ -89,7 +89,11 @@ files.each do |file|
       when :auto_cover
         unless o.cover?
           logger.info("Auto Cover #{file.cover_path}")
-          o.auto_cover!
+          begin
+            o.auto_cover!
+          rescue => e
+            logger.error("Failed to auto-cover file #{e}")
+          end
         end
       when :auto_tag
         logger.info("Auto Tag")

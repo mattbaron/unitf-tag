@@ -8,6 +8,11 @@ require_relative "tag/mp3"
 module UnitF
   module Tag
     class Error < StandardError; end
+    class MissingCover << Error; end
+
+    def self.logger
+      @@logger ||= Logger.new($stdout)
+    end
 
     def self.valid_file?(file_path)
       return ::File.file?(file_path) && file_path.match(/\.(flac|mp3)/i)
