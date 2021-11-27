@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "tag/version"
-require_relative "tag/file"
-require_relative "tag/flac"
-require_relative "tag/mp3"
+require_relative 'tag/version'
+require_relative 'tag/file'
+require_relative 'tag/flac'
+require_relative 'tag/mp3'
 
 module UnitF
   module Tag
@@ -11,37 +11,28 @@ module UnitF
     class MissingCover < Error; end
 
     def self.logger
-      @@logger ||= Logger.new($stdout)
+      @logger ||= Logger.new($stdout)
     end
 
     def self.valid_file?(file_path)
-      return ::File.file?(file_path) && file_path.match(/\.(flac|mp3)/i)
-    end
-
-    def self.process_target_dir(target_dir)
-      puts "Processing target_dir #{target_dir}"
-      files = []
-      Dir.glob("#{target_dir}/*").each do |file|
-        puts file
-      end
+      ::File.file?(file_path) && file_path.match(/\.(flac|mp3)$/i)
     end
 
     def self.process_target(target)
-      files = []
       if ::File.directory?(target)
-        files = find_files(target)
+        find_files(target)
       elsif valid_file?(target)
-        files << UnitF::Tag::File.new(target)
+        [UnitF::Tag::File.new(target)]
+      else
+        []
       end
-      files
     end
 
     def self.find_files(root_path)
       files = []
       Find.find(root_path) do |file_path|
-        next unless ::File.file?(file_path)
         next unless valid_file?(file_path)
-        files << UnitF::Tag::File::new(file_path)
+        files << UnitF::Tag::File.new(file_path)
       end
       files
     end

@@ -1,0 +1,6 @@
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+

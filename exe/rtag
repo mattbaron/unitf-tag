@@ -20,6 +20,10 @@ targets = OptionParser.new do |opts|
     opt[:recursive] = true
   end
 
+  opts.on('-d', '--dump', 'Dump Tags') do |item|
+    opt[:dump] = true
+  end
+
   opts.on('--auto_cover', 'Auto Cover') do |item|
     actions << :auto_cover
   end
@@ -65,17 +69,18 @@ if files.size.zero? && actions.size.zero?
   files = UnitF::Tag::find_files('.')
 end
 
+if files.size.zero?
+  logger.error('Cannot find any files to operate on')
+end
+
 if actions.size.zero?
   files.each do |file|
     file.open do |o|
-      o.print
+      o.print unless opt[:dump]
+      o.dump if opt[:dump]
     end
   end
   exit 0
-end
-
-if files.size.zero?
-  logger.error('Cannot find any files to operate on')
 end
 
 files.each do |file|

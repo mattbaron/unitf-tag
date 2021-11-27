@@ -24,6 +24,19 @@ module UnitF
       def delete_cover!
         @file.remove_pictures
       end
+
+      def album_artist=(artist)
+        @file.xiph_comment.add_field('ALBUM ARTIST', artist, true)
+      end
+
+      def dump
+        puts "File: #{realpath}"
+        tag = @file.xiph_comment
+        tag.field_list_map.each_key do |key|
+          puts "#{key}: #{tag.field_list_map[key]}"
+        end
+        puts
+      end
     end
   end
 end

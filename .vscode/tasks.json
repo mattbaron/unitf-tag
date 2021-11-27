@@ -16,7 +16,7 @@
       "presentation": {
         "clear": true
       },
-      "command": "bundle exec ruby bin/test.rb /Users/mbaron/tag/music/fIREHOSE"
+      "command": "bundle exec ruby exe/rtag /Users/mbaron/tag/music/fIREHOSE2/album.mp3/ --auto_tag"
     },
     {
       "label": "test-project",
