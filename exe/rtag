@@ -11,32 +11,38 @@ logger = Logger.new($stdout)
 actions = []
 files = []
 opt = {
-  :recursive => false,
-  :force => false
+  recursive: false,
+  force: false
 }
 
+UnitF::Tag.logger.level = Logger::INFO
+
 targets = OptionParser.new do |opts|
-  opts.on('-r', '--recursive', 'Auto Cover') do |item|
+  opts.on('-r', '--recursive', 'Auto Cover') do
     opt[:recursive] = true
   end
 
-  opts.on('-d', '--dump', 'Dump Tags') do |item|
+  opts.on('--dump', 'Dump Tags') do
     opt[:dump] = true
   end
 
-  opts.on('--auto_cover', 'Auto Cover') do |item|
+  opts.on('-d', '--debug', 'Debug') do
+    UnitF::Tag.logger.level = Logger::DEBUG
+  end
+
+  opts.on('--auto_cover', 'Auto Cover') do
     actions << :auto_cover
   end
 
-  opts.on('--delete_cover', 'Delete Cover') do |item|
+  opts.on('--delete_cover', 'Delete Cover') do
     actions << :delete_cover
   end
 
-  opts.on('--auto_tag', 'Auto Tag') do |item|
+  opts.on('--auto_tag', 'Auto Tag') do
     actions << :auto_tag
   end
 
-  opts.on('-f', '--force', 'Force') do |arg|
+  opts.on('-f', '--force', 'Force') do
     opt[:force] = true
   end
 
@@ -62,11 +68,11 @@ targets = OptionParser.new do |opts|
 end.parse!
 
 targets.each do |target|
-  files.concat(UnitF::Tag::process_target(target))
+  files.concat(UnitF::Tag.process_target(target))
 end
 
 if files.size.zero? && actions.size.zero?
-  files = UnitF::Tag::find_files('.')
+  files = UnitF::Tag.find_files('.')
 end
 
 if files.size.zero?
@@ -89,7 +95,7 @@ files.each do |file|
     actions.each do |action|
       case action
       when :delete_cover
-        logger.info("Delete cover")
+        logger.info('Delete cover')
         o.delete_cover!
       when :auto_cover
         unless o.cover?
@@ -101,7 +107,7 @@ files.each do |file|
           end
         end
       when :auto_tag
-        logger.info("Auto Tag")
+        logger.info('Auto Tag')
         o.auto_tag!
       when :artist
         logger.info("Setting artist to #{opt[:artist]}")
@@ -120,6 +126,6 @@ files.each do |file|
         o.tag.genre = opt[:track]
       end
     end
-    o.save
+    o.save || logger.error("Unable to save changes to #{file}")
   end
 end

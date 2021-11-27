@@ -31,6 +31,7 @@ module UnitF
     def self.find_files(root_path)
       files = []
       Find.find(root_path) do |file_path|
+        logger.debug("Considering #{file_path}")
         next unless valid_file?(file_path)
         files << UnitF::Tag::File.new(file_path)
       end
