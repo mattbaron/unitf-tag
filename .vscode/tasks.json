@@ -16,7 +16,7 @@
       "presentation": {
         "clear": true
       },
-      "command": "bundle exec ruby bin/test.rb"
+      "command": "bundle exec ruby bin/test.rb /Users/mbaron/tag/music/album.flac /Users/mbaron/tag/music/album.mp3/*"
     },
     {
       "label": "test-project",

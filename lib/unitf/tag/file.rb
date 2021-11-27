@@ -48,6 +48,10 @@ module UnitF
         cover!(cover_path)
       end
 
+      def auto_tag!
+
+      end
+
       def save
         @file.save
       end
@@ -60,7 +64,7 @@ module UnitF
       end
 
       def self.supported?(file_path)
-        return file_path.match(/\.(flac|mp3)/i)
+        return File.file?(file_path) && file_path.match(/\.(flac|mp3)/i)
       end
 
       def open
@@ -78,7 +82,7 @@ module UnitF
         end
       end
 
-      def self.find(root_path)
+      def self.find(root_path, recursive: true)
         files = []
         Find.find(root_path) do |file_path|
           next unless ::File.file?(file_path)
