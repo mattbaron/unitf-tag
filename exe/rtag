@@ -1,0 +1,116 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift("#{__dir__}/../lib")
+
+require 'logger'
+require 'optparse'
+require 'unitf/tag'
+
+logger = Logger.new($stdout)
+
+actions = []
+files = []
+opt = {
+  :recursive => false,
+  :force => false
+}
+
+targets = OptionParser.new do |opts|
+  opts.on('-r', '--recursive', 'Auto Cover') do |item|
+    opt[:recursive] = true
+  end
+
+  opts.on('--auto_cover', 'Auto Cover') do |item|
+    actions << :auto_cover
+  end
+
+  opts.on('--delete_cover', 'Delete Cover') do |item|
+    actions << :delete_cover
+  end
+
+  opts.on('--auto_tag', 'Auto Tag') do |item|
+    actions << :auto_tag
+  end
+
+  opts.on('-f', '--force', 'Force') do |arg|
+    opt[:force] = true
+  end
+
+  opts.on('--artist ARTIST', 'Artist') do |arg|
+    actions << :artist
+    opt[:artist] = arg
+  end
+
+  opts.on('--album ALBUM', 'Album') do |arg|
+    actions << :album
+    opt[:album] = arg
+  end
+
+  opts.on('--title TITLE', 'Song Title') do |arg|
+    actions << :title
+    opt[:title] = arg
+  end
+
+  opts.on('--genre GENRE', 'Genre') do |arg|
+    actions << :genre
+    opt[:genre] = arg
+  end
+end.parse!
+
+targets.each do |target|
+  files.concat(UnitF::Tag::process_target(target))
+end
+
+if files.size.zero? && actions.size.zero?
+  files = UnitF::Tag::find_files('.')
+end
+
+if actions.size.zero?
+  files.each do |file|
+    file.open do |o|
+      o.print
+    end
+  end
+  exit 0
+end
+
+if files.size.zero?
+  logger.error('Cannot find any files to operate on')
+end
+
+files.each do |file|
+  logger.info("Processing file: #{file}")
+  file.open do |o|
+    actions.each do |action|
+      case action
+      when :delete_cover
+        logger.info("Delete cover")
+        o.delete_cover!
+      when :auto_cover
+        unless o.cover?
+          logger.info("Auto Cover #{file.cover_path}")
+          o.auto_cover!
+        end
+      when :auto_tag
+        logger.info("Auto Tag")
+        o.auto_tag!
+      when :artist
+        logger.info("Setting artist to #{opt[:artist]}")
+        o.tag.artist = opt[:artist]
+      when :album
+        logger.info("Setting album to #{opt[:album]}")
+        o.tag.album = opt[:album]
+      when :title
+        logger.info("Setting title to #{opt[:title]}")
+        o.tag.title = opt[:title]
+      when :genre
+        logger.info("Setting genre to #{opt[:genre]}")
+        o.tag.genre = opt[:genre]
+      when :track
+        logger.info("Setting track to #{opt[:track]}")
+        o.tag.genre = opt[:track]
+      end
+    end
+    o.save
+  end
+end

@@ -1,11 +1,13 @@
 require 'find'
 require 'taglib'
+require 'pathname'
 
 module UnitF
   module Tag
     class File < Pathname
       def initialize(file_path)
         super(::File.absolute_path(file_path))
+
       end
 
       def tag
@@ -28,8 +30,8 @@ module UnitF
         "#{dirname}/cover.jpg"
       end
 
-      def valid?
-        extname.match(/(mp3|flac)$/i);
+      def auto_tag_path
+        "#{dirname}/.autotag"
       end
 
       def mp3?
@@ -40,7 +42,7 @@ module UnitF
         extname.match(/\.flac$/i)
       end
 
-      def cover?
+      def cover_available?
         ::File.exists?(cover_path)
       end
 
@@ -49,7 +51,22 @@ module UnitF
       end
 
       def auto_tag!
+        title = ::File.basename(realpath.to_path)
 
+        # This must come before gsubbing the title
+        track = title.match(/^\s*\d+/).to_s.to_i
+
+        title.gsub!(/\.\w+$/, '')
+        title.gsub!(/^\d*\s*(\-|\.)*\s*/, '')
+
+        path_parts = realpath.dirname.to_path.split('/')
+        album = path_parts[-1]
+        artist = path_parts[-2]
+
+        tag.album = album
+        tag.artist = artist
+        tag.title = title
+        tag.track = track
       end
 
       def save
@@ -61,10 +78,6 @@ module UnitF
           @file.close
           @file = nil
         end
-      end
-
-      def self.supported?(file_path)
-        return File.file?(file_path) && file_path.match(/\.(flac|mp3)/i)
       end
 
       def open
@@ -80,16 +93,6 @@ module UnitF
         unless object.nil?
           object.close
         end
-      end
-
-      def self.find(root_path, recursive: true)
-        files = []
-        Find.find(root_path) do |file_path|
-          next unless ::File.file?(file_path)
-          next unless supported?(file_path)
-          files << UnitF::Tag::File::new(file_path)
-        end
-        files
       end
     end
   end

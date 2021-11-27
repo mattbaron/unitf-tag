@@ -3,6 +3,7 @@ require 'optparse'
 require 'unitf/tag'
 
 actions = []
+files = []
 opt = {
   :recursive => false
 }
@@ -41,14 +42,11 @@ targets = OptionParser.new do |opts|
   end
 end.parse!
 
-pp actions
-pp opt
-pp targets
-
 targets.each do |target|
-  puts "TARGET: #{target}"
-  UnitF::Tag::process_target(target)
+  files.concat(UnitF::Tag::process_target(target))
 end
+
+pp files
 
 # if targets.size.zero? && actions.size.zero?
 #   files = UnitF::Tag::File.find('.')
@@ -56,9 +54,9 @@ end
 
 # pp files
 
-# UnitF::Tag::File.find(root).each do |file|
+# UnitF::Tag::File.find('/Users/mbaron/tag/music').each do |file|
 #   file.open do |obj|
-#     obj.print
+#     obj.auto_tag!
 #     #obj.delete_cover!
 #     #obj.auto_cover!
 #     #obj.save
