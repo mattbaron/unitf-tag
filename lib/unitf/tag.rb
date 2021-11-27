@@ -8,7 +8,7 @@ require_relative "tag/mp3"
 module UnitF
   module Tag
     class Error < StandardError; end
-    class MissingCover << Error; end
+    class MissingCover < Error; end
 
     def self.logger
       @@logger ||= Logger.new($stdout)
