@@ -15,7 +15,7 @@ module UnitF
     end
 
     def self.valid_file?(file_path)
-      ::File.file?(file_path) && file_path.match(/\.(flac|mp3)$/i)
+      ::File.file?(file_path) && file_path.encode.match(/\.(flac|mp3)$/i)
     end
 
     def self.process_target(target)
