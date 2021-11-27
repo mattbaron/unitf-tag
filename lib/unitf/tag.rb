@@ -16,6 +16,9 @@ module UnitF
 
     def self.valid_file?(file_path)
       ::File.file?(file_path) && file_path.encode.match(/\.(flac|mp3)$/i)
+    rescue ArgumentError => e
+      logger.error("Error processing #{file_path} - #{e.message}")
+      false
     end
 
     def self.process_target(target)
