@@ -2,8 +2,10 @@
 
 require_relative "tag/version"
 require_relative "tag/file"
+require_relative "tag/flac"
+require_relative "tag/mp3"
 
-module Unitf
+module UnitF
   module Tag
     class Error < StandardError; end
     # Your code goes here...
