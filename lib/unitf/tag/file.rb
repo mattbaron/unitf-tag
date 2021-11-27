@@ -23,6 +23,7 @@ module UnitF
         puts "Genre : #{tag.genre}"
         puts "Year  : #{tag.year}"
         puts "Cover : #{cover?}"
+        puts "Stats : #{stats}"
         puts
       end
 
@@ -43,7 +44,7 @@ module UnitF
       end
 
       def cover_available?
-        ::File.exists?(cover_path)
+        ::File.exist?(cover_path)
       end
 
       def auto_cover!
@@ -57,7 +58,7 @@ module UnitF
         track = title.match(/^\s*\d+/).to_s.to_i
 
         title.gsub!(/\.\w+$/, '')
-        title.gsub!(/^\d*\s*(\-|\.)*\s*/, '')
+        title.gsub!(/^\d*\s*(-|\.)*\s*/, '')
 
         path_parts = realpath.dirname.to_path.split('/')
         album = path_parts[-1]
@@ -75,25 +76,18 @@ module UnitF
       end
 
       def close
-        unless @file.nil?
-          @file.close
-          @file = nil
-        end
+        @file&.close
+        @file = nil
       end
 
       def open
-        object = nil
-        if flac?
-          object = UnitF::Tag::FLAC.new(to_path)
-        elsif mp3?
-          object = UnitF::Tag::MP3.new(to_path)
-        else
-          object = nil
-        end
+        object = if flac?
+                   UnitF::Tag::FLAC.new(to_path)
+                 elsif mp3?
+                   UnitF::Tag::MP3.new(to_path)
+                 end
         yield(object) if block_given?
-        unless object.nil?
-          object.close
-        end
+        object&.close
       end
     end
   end

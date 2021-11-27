@@ -4,3 +4,6 @@ Layout/EmptyLineAfterGuardClause:
 Style/Documentation:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+

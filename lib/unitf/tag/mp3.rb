@@ -6,6 +6,10 @@ module UnitF
         @file = TagLib::MPEG::File.new(file_path)
       end
 
+      def stats
+        sprintf("%.1fkHz/%dkbps", @file.audio_properties.sample_rate / 1000.to_f, @file.audio_properties.bitrate)
+      end
+
       def cover?
         @file.id3v2_tag.frame_list('APIC').size > 0
       end
