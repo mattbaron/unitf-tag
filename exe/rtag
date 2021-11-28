@@ -15,8 +15,6 @@ opt = {
   force: false
 }
 
-UnitF::Tag.logger.level = Logger::INFO
-
 targets = OptionParser.new do |opts|
   opts.on('-r', '--recursive', 'Auto Cover') do
     opt[:recursive] = true

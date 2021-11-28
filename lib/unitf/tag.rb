@@ -5,13 +5,19 @@ require_relative 'tag/file'
 require_relative 'tag/flac'
 require_relative 'tag/mp3'
 
+require 'unitf/logging'
+
 module UnitF
   module Tag
     class Error < StandardError; end
     class MissingCover < Error; end
 
     def self.logger
-      @logger ||= Logger.new($stdout)
+      unless @logger
+        @logger = UnitF::Logging::Logger.new
+        @logger.add_writer(UnitF::Logging::ConsoleWriter.new)
+      end
+      @logger
     end
 
     def self.valid_file?(file_path)

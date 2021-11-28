@@ -14,6 +14,19 @@ module UnitF
         @file.tag
       end
 
+      def info
+        {
+          file: realpath.to_path,
+          artist: tag.artist,
+          album: tag.album,
+          title: tag.title,
+          track: tag.track,
+          genre: tag.genre,
+          year: tag.year,
+          cover: cover?
+        }
+      end
+
       def print
         puts "File  : #{realpath}"
         puts "Artist: #{tag.artist}"

@@ -6,6 +6,14 @@ module UnitF
         @file = TagLib::FLAC::File.new(file_path)
       end
 
+      def info
+        super.merge!({
+          stats: stats,
+          sample_rate: @file.audio_properties.sample_rate,
+          bits_per_sample: @file.audio_properties.bits_per_sample
+        })
+      end
+
       def cover?
         @file.picture_list.each do |pic|
           return true if pic.type == TagLib::FLAC::Picture::FrontCover
