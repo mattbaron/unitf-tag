@@ -28,6 +28,14 @@ targets = OptionParser.new do |opts|
     UnitF::Tag.logger.level = Logger::DEBUG
   end
 
+  opts.on('-j', '--json', 'JSON Output') do
+    opt[:format] = :json
+  end
+
+  opts.on('-l', '--line', 'Single Line Output') do
+    opt[:format] = :line
+  end
+
   opts.on('--auto_cover', 'Auto Cover') do
     actions << :auto_cover
   end
@@ -65,20 +73,14 @@ targets = OptionParser.new do |opts|
   end
 end.parse!
 
-targets.each do |target|
-  files.concat(UnitF::Tag.process_target(target))
-end
-
-if files.size.zero? && actions.size.zero?
-  files = UnitF::Tag.find_files('.')
-end
+files = UnitF::Tag::FileSet.new(targets)
 
 if files.size.zero?
   logger.error('Cannot find any files to operate on')
 end
 
 if actions.size.zero?
-  UnitF::Tag.list(files, format: :json)
+  UnitF::Tag.list(files, format: opt[:format])
   exit 0
 end
 
