@@ -78,12 +78,7 @@ if files.size.zero?
 end
 
 if actions.size.zero?
-  files.each do |file|
-    file.open do |o|
-      o.print unless opt[:dump]
-      o.dump if opt[:dump]
-    end
-  end
+  UnitF::Tag.list(files, format: :json)
   exit 0
 end
 

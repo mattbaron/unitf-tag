@@ -2,7 +2,7 @@ require 'json'
 
 module UnitF
   module Tag
-    class Dumper
+    class Exporter
       def initialize
         @objects = []
       end

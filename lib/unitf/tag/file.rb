@@ -2,6 +2,7 @@ require 'find'
 require 'taglib'
 require 'pathname'
 require 'logger'
+require 'json'
 
 module UnitF
   module Tag
@@ -12,6 +13,18 @@ module UnitF
 
       def tag
         @file.tag
+      end
+
+      def format_json
+        JSON.pretty_generate(info)
+      end
+
+      def format_line
+        buff = []
+        info.each_key do |key|
+          buff << "#{key}=#{info[key]}"
+        end
+        buff.join(',')
       end
 
       def info

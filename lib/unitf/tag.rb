@@ -46,5 +46,22 @@ module UnitF
       end
       files
     end
+
+    def self.list(files, format: :json)
+      buff = []
+      files.each do |file|
+        file.open do |o|
+          case format
+          when :json
+            buff << o.info
+          when :line
+            puts o.format_line
+          else
+            o.print
+          end
+        end
+      end
+      puts JSON.pretty_generate(buff) if format == :json
+    end
   end
 end
