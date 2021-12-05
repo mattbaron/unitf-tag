@@ -10,10 +10,7 @@ logger = Logger.new($stdout)
 
 actions = []
 files = []
-opt = {
-  recursive: false,
-  force: false
-}
+opt = {}
 
 targets = OptionParser.new do |opts|
   opts.on('-r', '--recursive', 'Auto Cover') do
