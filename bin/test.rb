@@ -2,10 +2,9 @@ require 'optparse'
 
 require 'unitf/tag'
 
-file_str = '/Users/mbaron/tag/music/fIREHOSE3/Sometimes/01 - Sometimes.flac'
+UnitF::Log.to_console
 
-file = UnitF::Tag::FLAC.new(file_str)
-
+file = UnitF::Tag::File.new('/Users/mbaron/tmp/WFMU/BJ/bj211119.mp3')
 file.open do |o|
-  pp o.info
+  puts o.auto_tags
 end

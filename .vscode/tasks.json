@@ -16,7 +16,7 @@
       "presentation": {
         "clear": true
       },
-      "command": "bundle exec ruby exe/rtag /Users/mbaron/tag/music"
+      "command": "bundle exec ruby bin/test.rb"
     },
     {
       "label": "test-project",
