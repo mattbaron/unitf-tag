@@ -11,6 +11,20 @@ module UnitF
         super(::File.absolute_path(file_path.to_s))
       end
 
+      def update
+        open do |file|
+          yield file.tag
+          file.save || (raise UnitF::Tag::Error, "Failed to save file #{@file}")
+        end
+      end
+
+      def self.update(file_path)
+        UnitF::Tag::File.new(file_path).open do |file|
+          yield file.tag
+          file.save || (raise UnitF::Tag::Error, "Failed to save file #{file_path}")
+        end
+      end
+
       def tag
         @file.tag
       end

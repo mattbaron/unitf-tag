@@ -4,7 +4,7 @@ require 'unitf/tag'
 
 UnitF::Log.to_console
 
-file = UnitF::Tag::File.new('/Users/mbaron/tmp/WFMU/BJ/bj211119.mp3')
-file.open do |o|
-  puts o.auto_tags
+UnitF::Tag::File.update('/Users/mbaron/tmp/foo.mp3') do |tag|
+  tag.artist = 'bar123'
+  tag.year = 1972
 end
