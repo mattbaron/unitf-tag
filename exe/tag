@@ -65,6 +65,11 @@ targets = OptionParser.new do |opts|
     opt[:title] = arg
   end
 
+  opts.on('--year YEAR', 'Song Year') do |arg|
+    actions << :year
+    opt[:year] = arg.to_i
+  end
+
   opts.on('--genre GENRE', 'Genre') do |arg|
     actions << :genre
     opt[:genre] = arg
@@ -117,6 +122,9 @@ files.each do |file|
       when :track
         UnitF::Log.info("Setting track to #{opt[:track]}")
         o.tag.genre = opt[:track]
+      when :year
+        UnitF::Log.info("Setting year to #{opt[:year]}")
+        o.tag.year = opt[:year]
       end
     end
     o.save || UnitF::Log.error("Unable to save changes to #{file}")
