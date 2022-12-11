@@ -21,6 +21,13 @@ module UnitF
       @logger
     end
 
+    def self.update(file_path)
+      UnitF::Tag::File.new(file_path).open do |file|
+        yield file
+        file.save || (raise UnitF::Tag::Error, "Failed to save file #{file_path}")
+      end
+    end
+
     def self.valid_file?(file_path)
       ::File.file?(file_path) && file_path.encode.match(/\.(flac|mp3)$/i)
     rescue ArgumentError => e
