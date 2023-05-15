@@ -13,6 +13,8 @@ actions = []
 files = []
 opt = {}
 
+no_args = ARGV.size.zero?
+
 targets = OptionParser.new do |opts|
   opts.on('-r', '--recursive', 'Auto Cover') do
     opt[:recursive] = true
@@ -32,6 +34,12 @@ targets = OptionParser.new do |opts|
 
   opts.on('-l', '--line', 'Single Line Output') do
     opt[:format] = :line
+  end
+
+  opts.on('--cover COVER', 'Cover') do |arg|
+    actions << :cover
+    raise "Invalid cover file #{arg}" unless ::File.exist?(arg) && arg.downcase.end_with?('.jpg')
+    opt[:cover] = arg
   end
 
   opts.on('--auto_cover', 'Auto Cover') do
@@ -74,7 +82,14 @@ targets = OptionParser.new do |opts|
     actions << :genre
     opt[:genre] = arg
   end
+
+  opts.on('--track TRACK', 'Song Track') do |arg|
+    actions << :track
+    opt[:track] = arg
+  end
 end.parse!
+
+targets = Dir.glob('*') if no_args
 
 files = UnitF::Tag::FileSet.new(targets)
 
@@ -92,6 +107,9 @@ files.each do |file|
   file.open do |o|
     actions.each do |action|
       case action
+      when :cover
+        UnitF::Log.info("Cover #{opt[:cover]}")
+        o.cover!(opt[:cover])
       when :delete_cover
         UnitF::Log.info('Delete cover')
         o.delete_cover!
