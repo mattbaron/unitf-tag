@@ -85,7 +85,7 @@ targets = OptionParser.new do |opts|
 
   opts.on('--track TRACK', 'Song Track') do |arg|
     actions << :track
-    opt[:track] = arg
+    opt[:track] = arg.to_i
   end
 end.parse!
 
@@ -123,7 +123,7 @@ files.each do |file|
           end
         end
       when :auto_tag
-        UnitF::Log.info('Auto Tag')
+        UnitF::Log.info("Auto Tag #{file}")
         o.auto_tag!
       when :artist
         UnitF::Log.info("Setting artist to #{opt[:artist]}")
@@ -139,7 +139,7 @@ files.each do |file|
         o.tag.genre = opt[:genre]
       when :track
         UnitF::Log.info("Setting track to #{opt[:track]}")
-        o.tag.genre = opt[:track]
+        o.tag.track = opt[:track]
       when :year
         UnitF::Log.info("Setting year to #{opt[:year]}")
         o.tag.year = opt[:year]

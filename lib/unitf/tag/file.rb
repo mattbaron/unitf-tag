@@ -58,7 +58,7 @@ module UnitF
       end
 
       def auto_tag_path
-        "#{dirname}/.autotag"
+        "#{dirname}/.autotag.json"
       end
 
       def mp3?
@@ -77,23 +77,21 @@ module UnitF
         cover!(cover_path) if cover_available?
       end
 
-      def manual_auto_tags
-        UnitF::Log.info(auto_tag_path)
-        tags = {}
-        return {} unless ::File.exist?(auto_tag_path)
-        ::File.read(auto_tag_path).each_line do |line|
-          line.chomp!
-          UnitF::Log.info(line)
-          tag, value = line.split(/\s*=\s*/)
-          tags[tag.to_sym] = value
-        end
-        tags
-      rescue
-        {}
-      end
+      # def auto_tag_override
+      #   tags = {}
+      #   return {} unless ::File.exist?(auto_tag_path)
+      #   ::File.read(auto_tag_path).each_line do |line|
+      #     line.strip!
+      #     # UnitF::Log.info(line)
+      #     tag, value = line.split(/\s*=\s*/)
+      #     tags[tag.to_sym] = value
+      #   end
+      #   tags
+      # rescue
+      #   {}
+      # end
 
       def auto_tags
-        manual_tags = manual_auto_tags
         tags = {}
 
         tags[:title] = ::File.basename(realpath.to_path)
@@ -104,30 +102,20 @@ module UnitF
         tags[:album] = path_parts[-1]
         tags[:artist] = path_parts[-2]
 
-        tags.merge(manual_auto_tags)
+        begin
+          tags.merge!(JSON.parse(::File.read(auto_tag_path), symbolize_names: true))
+        rescue; end
+
+        tags
       end
 
       def auto_tag!
-        UnitF::Log.info("Auto tagging #{to_s}")
-        manual_auto_tags
-
-        title = ::File.basename(realpath.to_path)
-
-        # This must come before gsubbing the title
-        track = title.match(/^\s*\d+/).to_s.to_i
-
-        title.gsub!(/\.\w+$/, '')
-        title.gsub!(/^\d*\s*(-|\.)*\s*/, '')
-
-        path_parts = realpath.dirname.to_path.split('/')
-        album = path_parts[-1]
-        artist = path_parts[-2]
-
-        tag.album = album
-        tag.artist = artist
-        tag.title = title
-        tag.track = track
-        self.album_artist = artist
+        tags = auto_tags
+        tag.album = tags[:album]
+        tag.artist = tags[:artist]
+        tag.title = tags[:title]
+        tag.track = tags[:track] unless tags[:track].nil?
+        self.album_artist = tags[:artist]
       end
 
       def save
