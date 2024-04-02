@@ -16,7 +16,7 @@
       "presentation": {
         "clear": true
       },
-      "command": "bundle exec ruby exe/tag --dump /Users/mbaron/Desktop/sb/*"
+      "command": "/bin/rm -f *.gem && gem build"
     },
     {
       "label": "test-project",
