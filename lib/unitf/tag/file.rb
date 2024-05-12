@@ -121,7 +121,7 @@ module UnitF
         # This must come before gsubbing the title
         track = title.match(/^\s*\d+/).to_s.to_i
 
-        if title.scan(/(\.|_|-)(\d\d\d\d(\.|-)\d\d(\.|-)\d\d)/).any?
+        if title.scan(/(\.|_|-)(\d\d\d\d(\.|-)\d\d(\.|-)\d\d(\w*))\./).any?
           title = ::Regexp::last_match[2]
         else
           title.gsub!(/\.\w+$/, '')
