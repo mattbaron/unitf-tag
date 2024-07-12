@@ -122,7 +122,7 @@ module UnitF
         # This must come before gsubbing the title
         track = title.match(/^\s*\d+/).to_s.to_i
 
-        if title.scan(/(\.|_|-)((\d\d\d\d)(\.|-)\d\d(\.|-)\d\d)/).any?
+        if title.scan(/(\.|_|-)((\d\d\d\d)(\.|-)\d\d(\.|-)\d\d(\w*))\./).any?
           title = ::Regexp::last_match[2]
           album = "#{path_parts[-1]} #{::Regexp::last_match[3]}"
         else
