@@ -117,19 +117,20 @@ module UnitF
         UnitF::Log.info("Auto tagging #{to_s}")
 
         title = ::File.basename(realpath.to_path)
+        path_parts = realpath.dirname.to_path.split('/')
 
         # This must come before gsubbing the title
         track = title.match(/^\s*\d+/).to_s.to_i
 
-        if title.scan(/(\.|_|-)(\d\d\d\d(\.|-)\d\d(\.|-)\d\d)/).any?
+        if title.scan(/(\.|_|-)((\d\d\d\d)(\.|-)\d\d(\.|-)\d\d)/).any?
           title = ::Regexp::last_match[2]
+          album = "#{path_parts[-1]} #{::Regexp::last_match[3]}"
         else
           title.gsub!(/\.\w+$/, '')
           title.gsub!(/^\d*\s*(-|\.)*\s*/, '')
+          album = path_parts[-1]
         end
 
-        path_parts = realpath.dirname.to_path.split('/')
-        album = path_parts[-1]
         artist = path_parts[-2]
 
         tag.album = album
