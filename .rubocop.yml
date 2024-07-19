@@ -1,3 +1,6 @@
+AllCops:
+  NewCops: enable
+
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
@@ -10,5 +13,14 @@ Style/FrozenStringLiteralComment:
 Metrics/MethodLength:
   Enabled: false
 
-Metrics/AbcSize: 
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/FormatString:
   Enabled: false

@@ -88,33 +88,33 @@ module UnitF
           tags[tag.to_sym] = value
         end
         tags
-      rescue
+      rescue StandardError
         {}
       end
 
-      def auto_tags
-        manual_tags = manual_auto_tags
-        tags = {}
+      # def auto_tags
+      #   manual_tags = manual_auto_tags
+      #   tags = {}
 
-        tags[:title] = ::File.basename(realpath.to_path)
-        track = tags[:title].match(/^\s*\d+/).to_s.to_i
+      #   tags[:title] = ::File.basename(realpath.to_path)
+      #   track = tags[:title].match(/^\s*\d+/).to_s.to_i
 
-        if tags[:title].scan(/(\.|_|-)(\d\d\d\d(\.|-)\d\d(\.|-)\d\d)/)
-          tags[:title] = ::Regexp::last_match
-        else
-          tags[:title].gsub!(/\.\w+$/, '')
-          tags[:title].gsub!(/^\d*\s*(-|\.)*\s*/, '')
-        end
+      #   if tags[:title].scan(/(\.|_|-)(\d\d\d\d(\.|-)\d\d(\.|-)\d\d)/)
+      #     tags[:title] = ::Regexp::last_match
+      #   else
+      #     tags[:title].gsub!(/\.\w+$/, '')
+      #     tags[:title].gsub!(/^\d*\s*(-|\.)*\s*/, '')
+      #   end
 
-        path_parts = realpath.dirname.to_path.split('/')
-        tags[:album] = path_parts[-1]
-        tags[:artist] = path_parts[-2]
+      #   path_parts = realpath.dirname.to_path.split('/')
+      #   tags[:album] = path_parts[-1]
+      #   tags[:artist] = path_parts[-2]
 
-        tags.merge(manual_auto_tags)
-      end
+      #   tags.merge(manual_auto_tags)
+      # end
 
       def auto_tag!
-        UnitF::Log.info("Auto tagging #{to_s}")
+        UnitF::Log.info("Auto tagging #{self}")
 
         title = ::File.basename(realpath.to_path)
         path_parts = realpath.dirname.to_path.split('/')
@@ -123,8 +123,8 @@ module UnitF
         track = title.match(/^\s*\d+/).to_s.to_i
 
         if title.scan(/(\.|_|-)((\d\d\d\d)(\.|-)\d\d(\.|-)\d\d(\w*))\./).any?
-          title = ::Regexp::last_match[2]
-          album = "#{path_parts[-1]} #{::Regexp::last_match[3]}"
+          title = ::Regexp.last_match[2]
+          album = "#{path_parts[-1]} #{::Regexp.last_match[3]}"
         else
           title.gsub!(/\.\w+$/, '')
           title.gsub!(/^\d*\s*(-|\.)*\s*/, '')

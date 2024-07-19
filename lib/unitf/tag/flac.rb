@@ -24,8 +24,8 @@ module UnitF
       def cover!(file_path)
         pic = TagLib::FLAC::Picture.new
         pic.type = TagLib::FLAC::Picture::FrontCover
-        pic.mime_type = "image/jpeg"
-        pic.description = "Front Cover"
+        pic.mime_type = 'image/jpeg'
+        pic.description = 'Front Cover'
         pic.data = ::File.open(file_path, 'rb') { |f| f.read }
         @file.add_picture(pic)
       end
@@ -40,7 +40,7 @@ module UnitF
 
       def stats
         stats = @file.audio_properties
-        sprintf("%.1fkHz/%d-bit %dkbps", stats.sample_rate / 1000.to_f, stats.bits_per_sample, stats.bitrate)
+        sprintf('%.1fkHz/%d-bit %dkbps', stats.sample_rate / 1000.to_f, stats.bits_per_sample, stats.bitrate)
       end
 
       def dump

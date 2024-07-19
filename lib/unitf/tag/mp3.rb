@@ -7,7 +7,7 @@ module UnitF
       end
 
       def stats
-        sprintf("%.1fkHz/%dkbps", @file.audio_properties.sample_rate / 1000.to_f, @file.audio_properties.bitrate)
+        sprintf('%.1fkHz/%dkbps', @file.audio_properties.sample_rate / 1000.to_f, @file.audio_properties.bitrate)
       end
 
       def info
@@ -19,13 +19,13 @@ module UnitF
       end
 
       def cover?
-        @file.id3v2_tag.frame_list('APIC').size > 0
+        @file.id3v2_tag.frame_list('APIC').size.positive?
       end
 
       def cover!(file_path)
         apic = TagLib::ID3v2::AttachedPictureFrame.new
-        apic.mime_type = "image/jpeg"
-        apic.description = "Cover"
+        apic.mime_type = 'image/jpeg'
+        apic.description = 'Cover'
         apic.type = TagLib::ID3v2::AttachedPictureFrame::FrontCover
         apic.picture = ::File.open(file_path, 'rb') { |f| f.read }
         @file.id3v2_tag.add_frame(apic)
@@ -37,7 +37,7 @@ module UnitF
 
       def album_artist=(artist)
         @file.id3v2_tag.remove_frames('TPE2')
-        frame = TagLib::ID3v2::TextIdentificationFrame.new("TPE2", TagLib::String::UTF8)
+        frame = TagLib::ID3v2::TextIdentificationFrame.new('TPE2', TagLib::String::UTF8)
         frame.text = artist
         @file.id3v2_tag.add_frame(frame)
       end
