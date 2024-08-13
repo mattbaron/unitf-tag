@@ -16,7 +16,7 @@
       "presentation": {
         "clear": true
       },
-      "command": "/bin/rm -f *.gem && gem build"
+      "command": "bundle exec exe/tag --album FOO --year 2022 test-data"
     },
     {
       "label": "test-project",

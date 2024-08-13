@@ -12,7 +12,18 @@ module UnitF
       end
 
       def tag
-        @file.tag
+        raise Error, "File is not open #{self.class.name}" if @file&.tag.nil?
+
+        @file&.tag
+      end
+
+      def save
+        @file&.save
+      end
+
+      def close
+        @file&.close
+        @file = nil
       end
 
       def format_json
@@ -74,7 +85,13 @@ module UnitF
       end
 
       def auto_cover!
+        raise Error, "File is not open #{self.class.name}" if tag.nil?
+
         cover!(cover_path)
+        true
+      rescue StandardError => e
+        UnitF::Log.error("Failed to auto-cover file #{e}")
+        false
       end
 
       def manual_auto_tags
@@ -140,23 +157,28 @@ module UnitF
         self.album_artist = artist
       end
 
-      def save
-        @file.save
+      def properties!(properties)
+        properties.each_pair do |property, value|
+          UnitF::Log.info("Setting #{property} to #{value}")
+          tag.send("#{property}=", value)
+        end
       end
 
-      def close
-        @file&.close
-        @file = nil
+      def update
+        open(auto_save: true) do |file|
+          yield(file) if block_given?
+        end
       end
 
-      def open
-        object = if flac?
+      def open(auto_save: false)
+        file = if flac?
                    UnitF::Tag::FLAC.new(to_path)
                  elsif mp3?
                    UnitF::Tag::MP3.new(to_path)
                  end
-        yield(object) if block_given?
-        object&.close
+        yield(file) if block_given?
+        file.save if auto_save
+        file.close
       end
     end
   end

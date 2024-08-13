@@ -23,11 +23,12 @@ module UnitF
       end
 
       def cover!(file_path)
+        UnitF::Log.info("Setting cover #{file_path}")
         apic = TagLib::ID3v2::AttachedPictureFrame.new
         apic.mime_type = 'image/jpeg'
         apic.description = 'Cover'
         apic.type = TagLib::ID3v2::AttachedPictureFrame::FrontCover
-        apic.picture = ::File.open(file_path, 'rb') { |f| f.read }
+        apic.picture = ::File.binread(file_path)
         @file.id3v2_tag.add_frame(apic)
       end
 

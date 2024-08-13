@@ -22,11 +22,12 @@ module UnitF
       end
 
       def cover!(file_path)
+        UnitF::Log.info("Setting cover #{file_path}")
         pic = TagLib::FLAC::Picture.new
         pic.type = TagLib::FLAC::Picture::FrontCover
         pic.mime_type = 'image/jpeg'
         pic.description = 'Front Cover'
-        pic.data = ::File.open(file_path, 'rb') { |f| f.read }
+        pic.data = ::File.binread(file_path)
         @file.add_picture(pic)
       end
 
