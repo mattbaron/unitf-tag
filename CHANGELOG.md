@@ -1,5 +1,4 @@
-## [Unreleased]
+# UnitF::Tag
 
-## [0.1.0] - 2021-11-26
-
-- Initial release
+## v0.1.22
+- Look for covers in current directory and parent directory

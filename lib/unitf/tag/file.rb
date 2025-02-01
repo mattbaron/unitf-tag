@@ -65,7 +65,9 @@ module UnitF
       end
 
       def cover_path
-        "#{dirname}/cover.jpg"
+        ["#{dirname}/cover.jpg", "#{dirname}/../cover.jpg"].each do |path|
+          return ::File.realpath(path) if ::File.exist?(path)
+        end
       end
 
       def auto_tag_path
@@ -81,7 +83,7 @@ module UnitF
       end
 
       def cover_available?
-        ::File.exist?(cover_path)
+        cover_path != nil
       end
 
       def auto_cover!
