@@ -10,13 +10,13 @@ Notes on `taglib` and `taglib-ruby` issues
 curl -O https://taglib.org/releases/taglib-1.13.1.tar.gz
 tar xvf taglib-1.13.1.tar.gz
 cd taglib-1.13.1
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local/taglib -DCMAKE_BUILD_TYPE=Release .
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/taglib1 -DCMAKE_BUILD_TYPE=Release .
 make
 sudo make install
 ```
 
 ```
-TAGLIB_DIR=/usr/local/taglib gem install taglib-ruby --version '< 2'
+TAGLIB_DIR=/usr/local/taglib1 gem install taglib-ruby --version '< 2'
 ```
 
 ## Custom Build on Linux
