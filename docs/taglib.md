@@ -5,18 +5,32 @@ Notes on `taglib` and `taglib-ruby` issues
 - https://github.com/taglib/taglib
 - https://github.com/robinst/taglib-ruby
 
+## Custom TagLib 1.13.1 Build on MacOS
+```
+curl -O https://taglib.org/releases/taglib-1.13.1.tar.gz
+tar xvf taglib-1.13.1.tar.gz
+cd taglib-1.13.1
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/taglib -DCMAKE_BUILD_TYPE=Release .
+make
+sudo make install
+```
+
+```
+TAGLIB_DIR=/usr/local/taglib gem install taglib-ruby --version '< 2'
+```
+
 ## Custom Build on Linux
 ```
 git clone https://github.com/taglib/taglib.git
 cd taglib/
 git submodule update --init
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release .
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/taglib -DCMAKE_BUILD_TYPE=Release .
 make
 make install
 ```
 
 ```
-TAGLIB_DIR=/usr/local gem install taglib-ruby --version '>= 2'
+TAGLIB_DIR=/usr/local/taglib gem install taglib-ruby --version '>= 2'
 ```
 
 ### Taglib error w/ taglib 2.0.2
