@@ -54,6 +54,10 @@ targets = OptionParser.new do |opts|
     actions << :auto_tag
   end
 
+  opts.on('--auto_tags', 'Auto Tags') do
+    actions << :auto_tags
+  end
+
   opts.on('-f', '--force', 'Force') do
     opt[:force] = true
   end
@@ -109,6 +113,8 @@ files.each do |file|
         o.auto_cover!
       when :auto_tag
         o.auto_tag!
+      when :auto_tags
+        puts "\tauto_tags: #{o.auto_tags}\n\n"
       end
     end
   end

@@ -68,10 +68,8 @@ module UnitF
         ["#{dirname}/cover.jpg", "#{dirname}/../cover.jpg"].each do |path|
           return ::File.realpath(path) if ::File.exist?(path)
         end
-      end
 
-      def auto_tag_path
-        "#{dirname}/.autotag"
+        nil
       end
 
       def mp3?
@@ -83,80 +81,31 @@ module UnitF
       end
 
       def cover_available?
-        cover_path != nil
+        !cover_path.nil?
       end
 
       def auto_cover!
         raise Error, "File is not open #{self.class.name}" if tag.nil?
 
-        cover!(cover_path)
+        cover!(cover_path) if cover_available?
         true
       rescue StandardError => e
         UnitF::Log.error("Failed to auto-cover file #{e}")
         false
       end
 
-      def manual_auto_tags
-        UnitF::Log.info(auto_tag_path)
-        tags = {}
-        return {} unless ::File.exist?(auto_tag_path)
-        ::File.read(auto_tag_path).each_line do |line|
-          line.chomp!
-          UnitF::Log.info(line)
-          tag, value = line.split(/\s*=\s*/)
-          tags[tag.to_sym] = value
-        end
-        tags
-      rescue StandardError
-        {}
+      def auto_tags
+        @auto_tags ||= UnitF::Tag::AutoTags.new(self)
       end
-
-      # def auto_tags
-      #   manual_tags = manual_auto_tags
-      #   tags = {}
-
-      #   tags[:title] = ::File.basename(realpath.to_path)
-      #   track = tags[:title].match(/^\s*\d+/).to_s.to_i
-
-      #   if tags[:title].scan(/(\.|_|-)(\d\d\d\d(\.|-)\d\d(\.|-)\d\d)/)
-      #     tags[:title] = ::Regexp::last_match
-      #   else
-      #     tags[:title].gsub!(/\.\w+$/, '')
-      #     tags[:title].gsub!(/^\d*\s*(-|\.)*\s*/, '')
-      #   end
-
-      #   path_parts = realpath.dirname.to_path.split('/')
-      #   tags[:album] = path_parts[-1]
-      #   tags[:artist] = path_parts[-2]
-
-      #   tags.merge(manual_auto_tags)
-      # end
 
       def auto_tag!
         UnitF::Log.info("Auto tagging #{self}")
-
-        title = ::File.basename(realpath.to_path)
-        path_parts = realpath.dirname.to_path.split('/')
-
-        # This must come before gsubbing the title
-        track = title.match(/^\s*\d+/).to_s.to_i
-
-        if title.scan(/(\.|_|-)((\d\d\d\d)(\.|-)\d\d(\.|-)\d\d(\w*))\./).any?
-          title = ::Regexp.last_match[2]
-          album = "#{path_parts[-1]} #{::Regexp.last_match[3]}"
-        else
-          title.gsub!(/\.\w+$/, '')
-          title.gsub!(/^\d*\s*(-|\.)*\s*/, '')
-          album = path_parts[-1]
-        end
-
-        artist = path_parts[-2]
-
-        tag.album = album
-        tag.artist = artist
-        tag.title = title
-        tag.track = track
-        self.album_artist = artist
+        tag.album = auto_tags[:album]
+        tag.artist = auto_tags[:artist]
+        tag.title = auto_tags[:title]
+        tag.track = auto_tags[:track] if auto_tags.key?(:track)
+        tag.year = auto_tags[:year] if auto_tags.key?(:year)
+        self.album_artist = auto_tags[:artist]
       end
 
       def properties!(properties)

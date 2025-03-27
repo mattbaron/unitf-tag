@@ -6,6 +6,7 @@ require_relative 'tag/file'
 require_relative 'tag/fileset'
 require_relative 'tag/flac'
 require_relative 'tag/mp3'
+require_relative 'tag/auto_tags'
 
 require 'unitf/logging'
 

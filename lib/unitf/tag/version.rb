@@ -2,6 +2,6 @@
 
 module Unitf
   module Tag
-    VERSION = '0.1.22'
+    VERSION = '0.1.27'
   end
 end

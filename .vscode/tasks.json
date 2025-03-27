@@ -16,7 +16,15 @@
       "presentation": {
         "clear": true
       },
-      "command": "bundle exec exe/tag --album FOO --year 2022 test-data"
+      "command": "bundle exec ruby bin/test.rb"
+    },
+    {
+      "label": "tag-test",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}",
+      },
+      "command": "bundle exec ruby exe/tag --auto_tag '/Users/mbaron/music2/Dinosaur Jr/Little Fury Things'"
     },
     {
       "label": "test-project",

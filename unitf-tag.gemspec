@@ -27,6 +27,8 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'taglib-ruby', '1.1.2'
+  spec.add_dependency 'logger'
+  spec.add_dependency 'taglib-ruby', '1.1.3'
+  # spec.add_dependency 'taglib-ruby', '>= 2.0.0'
   spec.add_dependency 'unitf-logging'
 end

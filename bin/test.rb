@@ -4,23 +4,10 @@ require 'unitf/tag'
 
 UnitF::Log.to_console
 
-UnitF::Tag.update('test-data/foo.mp3') do |file|
-  file.tag.artist = 'bar123'
-  file.tag.year = 1972
-  file.tag.album = 'This is the album'
-  file.tag.title = 'This is the title'
-  file.tag.track = 99
-  file.auto_cover!
-end
+# file = UnitF::Tag::File.new('/Users/mbaron/music2/BJ/2025/foo/bar/../../bj250321.mp3')
 
-file = UnitF::Tag::File.new('test-data/bar.mp3')
-# file.tag
+# puts file.auto_tags
 
-file.update do |f|
-  f.tag.title = 'Hello world2!'
-  f.tag.track = 100
-end
-
-file.open do |f|
-  f.tag.title = 'Hello world9!'
-end
+# file.update do |f|
+#   f.auto_tag!
+# end
