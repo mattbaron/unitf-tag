@@ -12,6 +12,11 @@ module UnitF
         raise Error, "Unknown file type: #{file_path}" unless mp3? || flac?
       end
 
+      def dirname
+        # Such a dumb hack
+        @dirname ||= ::File.dirname(to_s)
+      end
+
       def format_json
         JSON.pretty_generate(info)
       end
@@ -77,6 +82,7 @@ module UnitF
         true
       rescue StandardError => e
         UnitF::Log.error("Failed to auto-cover file #{e}")
+        puts e.backtrace
         false
       end
 
