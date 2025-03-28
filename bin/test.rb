@@ -4,10 +4,12 @@ require 'unitf/tag'
 
 UnitF::Log.to_console
 
-# file = UnitF::Tag::File.new('/Users/mbaron/music2/BJ/2025/foo/bar/../../bj250321.mp3')
+UnitF::Tag.update('/Users/mbaron/git/unitf-tag/test-data/foo.mp3') do |file|
+  file.tag.artist = "Update #{Time.now.to_s}"
+end
 
-# puts file.auto_tags
+file = "/Users/mbaron/music2/WFMU/BJ/2025/foo/bar/../../bj250321.mp3"
 
-# file.update do |f|
-#   f.auto_tag!
-# end
+tags = UnitF::Tag::AutoTags.new(file)
+
+puts tags

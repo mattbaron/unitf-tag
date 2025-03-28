@@ -16,7 +16,6 @@ module UnitF
       def update(file_path)
         UnitF::Tag::File.new(file_path).update do |file|
           yield file
-          file.save || (raise UnitF::Tag::Error, "Failed to save file #{file_path}")
         end
       end
 

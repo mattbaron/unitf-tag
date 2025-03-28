@@ -9,21 +9,7 @@ module UnitF
     class File < Pathname
       def initialize(file_path)
         super(::File.absolute_path(file_path.to_s))
-      end
-
-      def tag
-        raise Error, "File is not open #{self.class.name}" if @file&.tag.nil?
-
-        @file&.tag
-      end
-
-      def save
-        @file&.save
-      end
-
-      def close
-        @file&.close
-        @file = nil
+        raise Error, "Unknown file type: #{file_path}" unless mp3? || flac?
       end
 
       def format_json
@@ -95,11 +81,15 @@ module UnitF
       end
 
       def auto_tags
-        @auto_tags ||= UnitF::Tag::AutoTags.new(self)
+        @auto_tags ||= UnitF::Tag::AutoTags.new(self.to_s)
       end
 
       def auto_tag!
+        raise Error, "File is not open #{self.class.name}" if tag.nil?
+
         UnitF::Log.info("Auto tagging #{self}")
+        UnitF::Log.info(auto_tags)
+
         tag.album = auto_tags[:album]
         tag.artist = auto_tags[:artist]
         tag.title = auto_tags[:title]
@@ -116,20 +106,44 @@ module UnitF
       end
 
       def update
-        open(auto_save: true) do |file|
-          yield(file) if block_given?
+        open do |file|
+          if block_given?
+            yield(file)
+            file.save || (raise UnitF::Tag::Error, "Failed to save file #{file}")
+          end
         end
       end
 
-      def open(auto_save: false)
+      def open
         file = if flac?
                    UnitF::Tag::FLAC.new(to_path)
                  elsif mp3?
                    UnitF::Tag::MP3.new(to_path)
                  end
         yield(file) if block_given?
-        file.save if auto_save
         file.close
+      end
+
+      #
+      # Methods that use @file, which comes from child classes
+      #
+      def tag
+        raise Error, "File is not open #{self.class.name}" if @file&.tag.nil?
+
+        @file&.tag
+      end
+
+      def save
+        raise Error, "File is not open #{self.class.name}" if @file&.tag.nil?
+
+        @file&.save
+      end
+
+      def close
+        raise Error, "File is not open #{self.class.name}" if @file&.tag.nil?
+
+        @file&.close
+        @file = nil
       end
     end
   end

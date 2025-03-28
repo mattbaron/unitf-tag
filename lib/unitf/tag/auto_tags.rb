@@ -1,12 +1,11 @@
 module UnitF
   module Tag
     class AutoTags < Hash
-      def initialize(pathname)
+      def initialize(file_path)
         super
 
-        pathname = Pathname.new(pathname) if pathname.is_a?(String)
-        @pathname = pathname.realpath
-        @dirname = pathname.realpath.dirname
+        @file_path = ::File.realpath(file_path.to_s)
+        @dirname = ::File.dirname(@file_path)
 
         merge!(from_path)
         merge!(from_file)
@@ -25,7 +24,7 @@ module UnitF
       def from_path
         tags = {}
 
-        tags[:title] = ::File.basename(@pathname)
+        tags[:title] = ::File.basename(@file_path)
         tags[:track] = tags[:title].match(/^\s*\d+/).to_s.to_i
 
         # Specific formatting for dated radio
@@ -39,7 +38,7 @@ module UnitF
 
         path_parts = @dirname.to_s.split('/')
         tags[:artist] = path_parts[-2]
-        tags[:album] = tags[:album_artist] = path_parts[-1]
+        tags[:album] = path_parts[-1]
 
         tags
       end

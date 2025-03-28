@@ -100,21 +100,22 @@ end
 
 files.each do |file|
   UnitF::Log.info("Processing file: #{file}")
-  file.update do |o|
-    o.properties!(properties) unless properties.empty?
+
+  file.update do |f|
+    f.properties!(properties) unless properties.empty?
 
     actions.each do |action|
       case action
       when :cover
-        o.cover!(opt[:cover])
+        f.cover!(opt[:cover])
       when :delete_cover
-        o.delete_cover!
+        f.delete_cover!
       when :auto_cover
-        o.auto_cover!
+        f.auto_cover!
       when :auto_tag
-        o.auto_tag!
+        f.auto_tag!
       when :auto_tags
-        puts "\tauto_tags: #{o.auto_tags}\n\n"
+        puts "\tauto_tags: #{f.auto_tags}\n\n"
       end
     end
   end
