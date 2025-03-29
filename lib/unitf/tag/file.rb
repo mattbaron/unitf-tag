@@ -6,15 +6,22 @@ require 'json'
 
 module UnitF
   module Tag
-    class File < Pathname
+    class File
+      attr_accessor :path, :realpath, :dirname, :extname
+
       def initialize(file_path)
-        super(::File.absolute_path(file_path.to_s))
+        raise Error, "Invalid file #{file_path}" unless ::File.exist?(file_path)
+
+        @path = ::File.path(file_path.to_s)
+        @realpath = ::File.realpath(path)
+        @dirname = ::File.dirname(path)
+        @extname = ::File.extname(path)
+
         raise Error, "Unknown file type: #{file_path}" unless mp3? || flac?
       end
 
-      def dirname
-        # Such a dumb hack
-        @dirname ||= ::File.dirname(to_s)
+      def to_s
+        @path
       end
 
       def format_json
@@ -31,7 +38,7 @@ module UnitF
 
       def info
         {
-          file: realpath.to_path,
+          file: realpath,
           artist: tag.artist,
           album: tag.album,
           title: tag.title,
@@ -87,12 +94,10 @@ module UnitF
       end
 
       def auto_tags
-        @auto_tags ||= UnitF::Tag::AutoTags.new(self.to_s)
+        @auto_tags ||= UnitF::Tag::AutoTags.new(path)
       end
 
       def auto_tag!
-        raise Error, "File is not open #{self.class.name}" if tag.nil?
-
         UnitF::Log.info("Auto tagging #{self}")
         UnitF::Log.info(auto_tags)
 
@@ -115,17 +120,17 @@ module UnitF
         open do |file|
           if block_given?
             yield(file)
-            file.save || (raise UnitF::Tag::Error, "Failed to save file #{file}")
+            file.save || (raise Error, "Failed to save file #{file}")
           end
         end
       end
 
       def open
         file = if flac?
-                   UnitF::Tag::FLAC.new(to_path)
-                 elsif mp3?
-                   UnitF::Tag::MP3.new(to_path)
-                 end
+                 UnitF::Tag::FLAC.new(path)
+               elsif mp3?
+                 UnitF::Tag::MP3.new(path)
+               end
         yield(file) if block_given?
         file.close
       end

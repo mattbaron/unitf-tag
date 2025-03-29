@@ -27,7 +27,7 @@
       "command": "bundle exec ruby exe/tag --auto_tag '/Users/mbaron/music2/Dinosaur Jr/Little Fury Things'"
     },
     {
-      "label": "test-project",
+      "label": "rspec",
       "type": "shell",
       "presentation": {
         "clear": true
