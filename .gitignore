@@ -8,7 +8,6 @@
 /tmp/
 Gemfile.lock
 *.gem
-*.mp3
 
 # rspec failure tracking
 .rspec_status
