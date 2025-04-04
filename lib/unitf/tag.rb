@@ -42,7 +42,7 @@ module UnitF
         puts JSON.pretty_generate(buff) if format == :json
       end
 
-      def auto_track(dir:)
+      def auto_track(dir)
         UnitF::Log.info("Auto track #{dir}")
         track = 1
 

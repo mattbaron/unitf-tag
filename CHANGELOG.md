@@ -1,5 +1,8 @@
 # UnitF::Tag
 
+## v0.2.2
+- Change `UnitF::Tag.auto_track` signature
+
 ## v0.2.1
 - Add `UnitF::Tag.auto_track`
 - Add `UnitF::Tag.open`
