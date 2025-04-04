@@ -1,5 +1,9 @@
 # UnitF::Tag
 
+## v0.2.1
+- Add `UnitF::Tag.auto_track`
+- Add `UnitF::Tag.open`
+
 ## v0.2.0
 - `UnitF::Tag::File` no longer inherits anything]
 - Spec Tests
