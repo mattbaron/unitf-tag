@@ -13,6 +13,8 @@ actions = []
 opt = {}
 properties = {}
 
+auto_track = []
+
 no_args = ARGV.empty?
 
 targets = OptionParser.new do |opts|
@@ -58,6 +60,10 @@ targets = OptionParser.new do |opts|
     actions << :auto_tags
   end
 
+  opts.on('--auto_track DIRECTORY', 'Auto Track') do |dir|
+    auto_track << dir
+  end
+
   opts.on('-f', '--force', 'Force') do
     opt[:force] = true
   end
@@ -87,11 +93,16 @@ targets = OptionParser.new do |opts|
   end
 end.parse!
 
-targets = Dir.glob('*') if no_args
+auto_track.each do |dir|
+  UnitF::Tag.auto_track(dir)
+rescue StandardError => e
+  UnitF::Log.warn(e.message)
+end
 
+targets = Dir.glob('*') if no_args
 files = UnitF::Tag::FileSet.new(targets)
 
-UnitF::Log.error('Cannot find any files to operate on') if files.empty?
+exit(0) if files.empty?
 
 if actions.empty? && properties.empty?
   UnitF::Tag.list(files, format: opt[:format])

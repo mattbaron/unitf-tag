@@ -43,6 +43,8 @@ module UnitF
       end
 
       def auto_track(dir)
+        raise Error,  "Invalid directory #{dir}" unless ::Dir.exist?(dir)
+
         UnitF::Log.info("Auto track #{dir}")
         track = 1
 
