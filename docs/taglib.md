@@ -5,7 +5,7 @@ Notes on `taglib` and `taglib-ruby` issues
 - https://github.com/taglib/taglib
 - https://github.com/robinst/taglib-ruby
 
-## Custom TagLib 1.13.1 Build on MacOS
+## Custom TagLib 1.13.1 Build on MacOS/Linux
 ```
 curl -O https://taglib.org/releases/taglib-1.13.1.tar.gz
 tar xvf taglib-1.13.1.tar.gz
@@ -19,7 +19,7 @@ sudo make install
 TAGLIB_DIR=/usr/local/taglib1 gem install taglib-ruby --version '< 2'
 ```
 
-## Custom Build on Linux
+## Custom Build on Linux using git
 ```
 git clone https://github.com/taglib/taglib.git
 cd taglib/
