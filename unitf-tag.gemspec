@@ -4,7 +4,7 @@ require_relative 'lib/unitf/tag/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'unitf-tag'
-  spec.version       = Unitf::Tag::VERSION
+  spec.version       = UnitF::Tag::VERSION
   spec.authors       = ['Matt Baron']
   spec.email         = ['mwb@unitf.net']
 
