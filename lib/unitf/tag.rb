@@ -25,6 +25,14 @@ module UnitF
         end
       end
 
+      def dump(files)
+        files.each do |file|
+          file.open do |f|
+            f.dump
+          end
+        end
+      end
+
       def list(files, format: :json)
         buff = []
         files.each do |file|

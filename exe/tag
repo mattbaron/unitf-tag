@@ -10,7 +10,9 @@ require 'unitf/logging'
 UnitF::Log.to_console
 
 actions = []
-opt = {}
+opt = {
+  dump: false
+}
 properties = {}
 
 auto_track = []
@@ -104,6 +106,12 @@ files = UnitF::Tag::FileSet.new(targets)
 
 exit(0) if files.empty?
 
+
+if opt[:dump]
+  UnitF::Tag.dump(files)
+  exit 0
+end
+
 if actions.empty? && properties.empty?
   UnitF::Tag.list(files, format: opt[:format])
   exit 0
@@ -111,7 +119,6 @@ end
 
 files.each do |file|
   UnitF::Log.info("Processing file: #{file}")
-
   file.update do |f|
     f.properties!(properties) unless properties.empty?
 
