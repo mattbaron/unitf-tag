@@ -59,7 +59,7 @@ module UnitF
         @file.picture_list.each do |pic|
            @pictures << "Picture[#{pic.type}]:#{pic.description}"
         end
-        @raw_fields['pictures'] = @pictures.join(', ')
+        @raw_fields['Pictures'] = @pictures.join(', ')
 
         @raw_fields
       end
