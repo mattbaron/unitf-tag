@@ -27,8 +27,12 @@ module UnitF
 
       def dump(files)
         files.each do |file|
+          puts "File: #{file.realpath}"
           file.open do |f|
-            f.dump
+            f.raw_fields.each_pair do |key, value|
+              puts "#{key}: #{value}"
+            end
+            puts
           end
         end
       end

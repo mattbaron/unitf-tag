@@ -44,17 +44,19 @@ module UnitF
         sprintf('%.1fkHz/%d-bit %dkbps', stats.sample_rate / 1000.to_f, stats.bits_per_sample, stats.bitrate)
       end
 
-      def dump
-        puts "File: #{realpath}"
-        tag = @file.xiph_comment
-        tag.field_list_map.each_key do |key|
-          puts "#{key}: #{tag.field_list_map[key]}"
+      def raw_fields
+        retun @raw_fields unless @raw_fields.nil?
+
+        @raw_fields = {}
+        @file.xiph_comment.field_list_map.each_pair do |key, value|
+          @raw_fields[key] = value
         end
 
         @file.picture_list.each do |pic|
-          puts "Picture: type=#{pic.type}, desc=#{pic.description}"
+          @raw_fields["Pic(#{pic.description})"] = true
         end
-        puts
+
+        @raw_fields
       end
     end
   end

@@ -47,14 +47,16 @@ module UnitF
         @file.id3v2_tag.add_frame(frame)
       end
 
-      def dump
-        puts "File: #{realpath}"
-        tag = @file.id3v2_tag
-        tag.frame_list.each do |frame|
+      def raw_fields
+        return @raw_fields unless @raw_fields.nil?
+
+        @raw_fields = {}
+        @file.id3v2_tag.frame_list.each do |frame|
           next unless frame.is_a?(TagLib::ID3v2::TextIdentificationFrame)
-          puts "#{frame.frame_id}: #{tag.frame_list(frame.frame_id).first}"
+          @raw_fields[frame.frame_id] = @file.id3v2_tag.frame_list(frame.frame_id).first
         end
-        puts
+
+        @raw_fields
       end
     end
   end
