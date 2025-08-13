@@ -28,11 +28,14 @@ module UnitF
         pic.mime_type = 'image/jpeg'
         pic.description = 'Front Cover'
         pic.data = ::File.binread(file_path)
+        delete_cover!
         @file.add_picture(pic)
       end
 
       def delete_cover!
-        @file.remove_pictures
+        @file.picture_list.each do |picture|
+          @file.remove_picture(picture) if picture.type == TagLib::FLAC::Picture::FrontCover
+        end
       end
 
       def album_artist=(artist)
@@ -52,9 +55,11 @@ module UnitF
           @raw_fields[key] = value
         end
 
+        @pictures = []
         @file.picture_list.each do |pic|
-          @raw_fields["Pic(#{pic.description})"] = true
+           @pictures << "Picture[#{pic.type}]:#{pic.description}"
         end
+        @raw_fields['pictures'] = @pictures.join(', ')
 
         @raw_fields
       end
