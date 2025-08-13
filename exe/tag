@@ -11,10 +11,11 @@ UnitF::Log.to_console
 
 actions = []
 opt = {
-  dump: false
+  dump: false,
+  force: false
 }
-properties = {}
 
+properties = {}
 auto_track = []
 
 no_args = ARGV.empty?
@@ -105,7 +106,6 @@ targets = Dir.glob('*') if no_args
 files = UnitF::Tag::FileSet.new(targets)
 
 exit(0) if files.empty?
-
 
 if opt[:dump]
   UnitF::Tag.dump(files)
