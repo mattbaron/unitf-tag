@@ -2,6 +2,16 @@ require 'optparse'
 
 require 'unitf/tag'
 
-UnitF::Log.to_console
+base = '/Users/mbaron/tmp/music'
 
-UnitF::Tag.auto_track(dir: '/Users/mbaron/music2/WFMU/BJ/2025')
+file = UnitF::Tag::File.new("#{base}/fIREHOSE/Sometimes/01 - Sometimes.flac")
+cover = UnitF::Tag::CoverCache.cover_for(file)
+
+puts "Cover nil? #{cover.nil?}"
+puts UnitF::Tag::CoverCache.info
+
+file = UnitF::Tag::File.new("#{base}/fIREHOSE/Sometimes/02 - For The Singer Of R.E.M..flac")
+cover = UnitF::Tag::CoverCache.cover_for(file)
+
+puts "Cover nil? #{cover.nil?}"
+puts UnitF::Tag::CoverCache.info

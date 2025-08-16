@@ -8,6 +8,7 @@ require_relative 'tag/flac'
 require_relative 'tag/mp3'
 require_relative 'tag/auto_tags'
 require_relative 'tag/formatter'
+require_relative 'tag/cover_cache'
 
 require 'unitf/logging'
 

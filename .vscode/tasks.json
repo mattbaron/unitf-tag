@@ -24,7 +24,7 @@
       "options": {
         "cwd": "${workspaceFolder}",
       },
-      "command": "bundle exec ruby exe/tag --auto_tag '/Users/mbaron/music2/Dinosaur Jr/Little Fury Things'"
+      "command": "bundle exec ruby bin/test.rb"
     },
     {
       "label": "rspec",

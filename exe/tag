@@ -21,10 +21,6 @@ auto_track = []
 no_args = ARGV.empty?
 
 targets = OptionParser.new do |opts|
-  opts.on('-r', '--recursive', 'Auto Cover') do
-    opt[:recursive] = true
-  end
-
   opts.on('-d', '--debug', 'Debug') do
     UnitF::Tag.logger.level = Logger::DEBUG
   end
@@ -59,7 +55,7 @@ targets = OptionParser.new do |opts|
     actions << :auto_tag
   end
 
-  opts.on('--auto_tags', '--auto-tags', 'Auto Tags') do
+  opts.on('--auto_tags', '--auto-tags', 'Display Auto Tags') do
     actions << :auto_tags
   end
 
@@ -67,32 +63,32 @@ targets = OptionParser.new do |opts|
     auto_track << dir
   end
 
-  opts.on('-f', '--force', 'Force') do
-    opt[:force] = true
-  end
-
-  opts.on('--artist ARTIST', 'Artist') do |arg|
+  opts.on('--artist ARTIST', 'Set Artist') do |arg|
     properties[:artist] = arg
   end
 
-  opts.on('--album ALBUM', 'Album') do |arg|
+  opts.on('--album ALBUM', 'Set Album') do |arg|
     properties[:album] = arg
   end
 
-  opts.on('--title TITLE', 'Song Title') do |arg|
+  opts.on('--title TITLE', 'Set Song Title') do |arg|
     properties[:title] = arg
   end
 
-  opts.on('--year YEAR', 'Song Year') do |arg|
+  opts.on('--year YEAR', 'Set Song Year') do |arg|
     properties[:year] = arg.to_i
   end
 
-  opts.on('--genre GENRE', 'Genre') do |arg|
+  opts.on('--genre GENRE', 'Set Genre') do |arg|
     properties[:genre] = arg
   end
 
-  opts.on('--track TRACK', 'Song Track') do |arg|
+  opts.on('--track TRACK', 'Set Track') do |arg|
     properties[:track] = arg.to_i
+  end
+
+  opts.on('-f', '--force', 'Force') do
+    opt[:force] = true
   end
 end.parse!
 

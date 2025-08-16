@@ -23,16 +23,17 @@ module UnitF
       end
 
       def cover!(file_path)
-        return unless ::File.exist?(file_path.to_s)
-
-        delete_cover! if cover?
+        return if file_path.nil?
 
         UnitF::Log.info("Setting cover #{file_path}")
         apic = TagLib::ID3v2::AttachedPictureFrame.new
         apic.mime_type = 'image/jpeg'
         apic.description = 'Cover'
         apic.type = TagLib::ID3v2::AttachedPictureFrame::FrontCover
-        apic.picture = ::File.binread(file_path)
+        apic.picture = UnitF::Tag::CoverCache.cover_data(file_path)
+
+        delete_cover! if cover?
+
         @file.id3v2_tag.add_frame(apic)
       end
 

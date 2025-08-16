@@ -9,7 +9,7 @@ require 'unitf/tag/formatter'
 module UnitF
   module Tag
     class File
-      attr_accessor :path, :realpath, :dirname, :extname, :fields
+      attr_accessor :path, :realpath, :dirname, :extname, :cover_path
 
       def initialize(file_path)
         raise Error, "Invalid file #{file_path}" unless ::File.exist?(file_path)
@@ -20,10 +20,14 @@ module UnitF
         @extname = ::File.extname(path)
 
         raise Error, "Unknown file type: #{file_path}" unless mp3? || flac?
+
+        ["#{dirname}/cover.jpg", "#{dirname}/../cover.jpg"].each do |path|
+          @cover_path = ::File.realpath(path) if ::File.exist?(path)
+        end
       end
 
       def to_s
-        @path
+        @realpath
       end
 
       def fields
@@ -41,14 +45,6 @@ module UnitF
 
       def extended_fields
         @extended_fields ||= fields.merge(stats: stats)
-      end
-
-      def cover_path
-        ["#{dirname}/cover.jpg", "#{dirname}/../cover.jpg"].each do |path|
-          return ::File.realpath(path) if ::File.exist?(path)
-        end
-
-        nil
       end
 
       def mp3?
