@@ -22,7 +22,7 @@ no_args = ARGV.empty?
 
 targets = OptionParser.new do |opts|
   opts.on('-d', '--debug', 'Debug') do
-    UnitF::Tag.logger.level = Logger::DEBUG
+    UnitF::Log.logger.level = Logger::DEBUG
   end
 
   opts.on('-j', '--json', 'JSON Output') do
