@@ -25,10 +25,6 @@ targets = OptionParser.new do |opts|
     opt[:recursive] = true
   end
 
-  opts.on('--dump', 'Dump Tags') do
-    opt[:dump] = true
-  end
-
   opts.on('-d', '--debug', 'Debug') do
     UnitF::Tag.logger.level = Logger::DEBUG
   end
@@ -37,8 +33,12 @@ targets = OptionParser.new do |opts|
     opt[:format] = :json
   end
 
-  opts.on('-l', '--line', 'Single Line Output') do
-    opt[:format] = :line
+  opts.on('--raw', '--dump', 'Dump Raw Tags') do
+    opt[:format] = :raw
+  end
+
+  opts.on('--kvp', 'Key value pairs') do
+    opt[:format] = :kvp
   end
 
   opts.on('--cover COVER', 'Cover') do |arg|
@@ -106,11 +106,6 @@ targets = Dir.glob('*') if no_args
 files = UnitF::Tag::FileSet.new(targets)
 
 exit(0) if files.empty?
-
-if opt[:dump]
-  UnitF::Tag.dump(files)
-  exit 0
-end
 
 if actions.empty? && properties.empty?
   UnitF::Tag.list(files, format: opt[:format])

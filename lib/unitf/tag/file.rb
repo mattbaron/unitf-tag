@@ -4,10 +4,12 @@ require 'pathname'
 require 'logger'
 require 'json'
 
+require 'unitf/tag/formatter'
+
 module UnitF
   module Tag
     class File
-      attr_accessor :path, :realpath, :dirname, :extname
+      attr_accessor :path, :realpath, :dirname, :extname, :fields
 
       def initialize(file_path)
         raise Error, "Invalid file #{file_path}" unless ::File.exist?(file_path)
@@ -24,20 +26,8 @@ module UnitF
         @path
       end
 
-      def format_json
-        JSON.pretty_generate(info)
-      end
-
-      def format_line
-        buff = []
-        info.each_key do |key|
-          buff << "#{key}=#{info[key]}"
-        end
-        buff.join(',')
-      end
-
-      def info
-        {
+      def fields
+        @fields ||= {
           file: realpath,
           artist: tag.artist,
           album: tag.album,
@@ -49,17 +39,8 @@ module UnitF
         }
       end
 
-      def print
-        puts "File  : #{realpath}"
-        puts "Artist: #{tag.artist}"
-        puts "Album : #{tag.album}"
-        puts "Title : #{tag.title}"
-        puts "Track : #{tag.track}"
-        puts "Genre : #{tag.genre}"
-        puts "Year  : #{tag.year}"
-        puts "Cover : #{cover?}"
-        puts "Stats : #{stats}"
-        puts
+      def extended_fields
+        @extended_fields ||= fields.merge(stats: stats)
       end
 
       def cover_path

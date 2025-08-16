@@ -7,6 +7,7 @@ require_relative 'tag/fileset'
 require_relative 'tag/flac'
 require_relative 'tag/mp3'
 require_relative 'tag/auto_tags'
+require_relative 'tag/formatter'
 
 require 'unitf/logging'
 
@@ -25,30 +26,21 @@ module UnitF
         end
       end
 
-      def dump(files)
-        files.each do |file|
-          puts "File: #{file.realpath}"
-          file.open do |f|
-            f.raw_fields.each_pair do |key, value|
-              puts "#{key}: #{value}"
-            end
-            puts
-          end
-        end
-      end
-
       def list(files, format: :json)
         buff = []
-        files.each do |file|
-          file.open do |o|
+        files.each do |f|
+          f.open do |file|
             case format
             when :json
-              buff << o.info
-            when :line
-              puts o.format_line
+              buff << file.fields
+            when :kvp
+              puts UnitF::Tag::Formatter.kvp(file)
+            when :raw
+              puts UnitF::Tag::Formatter.raw(file)
             else
-              o.print
+              puts UnitF::Tag::Formatter.default(file)
             end
+            puts unless [:json, :kvp].include?(format)
           end
         end
         puts JSON.pretty_generate(buff) if format == :json
